@@ -13,13 +13,20 @@ Check the live status of 170+ cloud and SaaS providers from a terminal or CI scr
 brew install outagedeck/tap/outagedeck
 ```
 
+On Windows with Scoop:
+
+```powershell
+scoop bucket add outagedeck https://github.com/outagedeck/scoop-bucket
+scoop install outagedeck
+```
+
 Or install from source:
 
 ```bash
 go install github.com/outagedeck/cli/cmd/outagedeck@latest
 ```
 
-Release archives for macOS and Linux are available on the [releases page](https://github.com/outagedeck/cli/releases).
+Release archives for macOS, Linux, and Windows are available on the [releases page](https://github.com/outagedeck/cli/releases).
 
 ## Use
 
