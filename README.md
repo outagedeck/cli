@@ -21,6 +21,12 @@ With [mise](https://mise.jdx.dev/):
 mise use -g github:outagedeck/cli@0.1.0
 ```
 
+With Nix:
+
+```bash
+nix run github:outagedeck/cli -- --version
+```
+
 On Windows with Scoop:
 
 ```powershell
