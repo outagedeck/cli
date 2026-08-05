@@ -5,6 +5,8 @@
 [![Latest release](https://img.shields.io/github/v/release/outagedeck/cli)](https://github.com/outagedeck/cli/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+![OutageDeck CLI checking GitHub, Anthropic, Cloudflare, and OpenAI](assets/terminal-preview.png)
+
 Check the live status of 170+ cloud and SaaS providers from a terminal or CI script. OutageDeck normalizes each vendor's official status feed; it does not replace synthetic monitoring.
 
 ## Install
