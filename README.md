@@ -1,0 +1,67 @@
+# OutageDeck CLI
+
+[![OutageDeck logo](https://raw.githubusercontent.com/outagedeck/mcp/main/assets/logo.png)](https://outagedeck.com?utm_source=github&utm_medium=repository&utm_campaign=cli_distribution)
+
+[![CI](https://github.com/outagedeck/cli/actions/workflows/ci.yml/badge.svg)](https://github.com/outagedeck/cli/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/outagedeck/cli)](https://github.com/outagedeck/cli/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+Check the live status of 170+ cloud and SaaS providers from a terminal or CI script. OutageDeck normalizes each vendor's official status feed; it does not replace synthetic monitoring.
+
+## Install
+
+```bash
+brew install outagedeck/tap/outagedeck
+```
+
+Or install from source:
+
+```bash
+go install github.com/outagedeck/cli/cmd/outagedeck@latest
+```
+
+Release archives for macOS and Linux are available on the [releases page](https://github.com/outagedeck/cli/releases).
+
+## Use
+
+```console
+$ outagedeck status aws cloudflare github openai
+OK AWS: Operational — All Systems Operational
+OK Cloudflare: Operational — All Systems Operational
+OK GitHub: Operational — All Systems Operational
+!! OpenAI: Degraded — OpenAI reports an active incident
+```
+
+Find a provider slug:
+
+```console
+$ outagedeck search "Claude"
+anthropic                operational        Anthropic
+```
+
+Use structured output in scripts:
+
+```bash
+outagedeck status --json --fail-on=outage aws github openai
+```
+
+The status command exits with:
+
+- `0` when every provider is below the selected threshold;
+- `1` when a request or argument fails;
+- `2` when at least one provider meets the selected threshold.
+
+`--fail-on` accepts `degraded` (default), `outage`, `major_outage`, or `never`. Set `OUTAGEDECK_API_KEY` or pass `--api-key` for a higher API quota.
+
+## Data and trust
+
+- Data comes from official vendor status feeds and is refreshed about every 10 minutes.
+- An unreachable or malformed response is an error, never `operational`.
+- The public API allows 120 requests per hour. The CLI checks up to 20 providers concurrently.
+- No telemetry is added by the CLI. Requests identify the client through a standard `User-Agent` header.
+
+Review the [API documentation](https://outagedeck.com/developers/api?utm_source=github&utm_medium=repository&utm_campaign=cli_distribution) or [configure outage alerts](https://outagedeck.com/alerts?utm_source=github&utm_medium=repository&utm_campaign=cli_distribution).
+
+## License
+
+MIT
