@@ -15,6 +15,12 @@ Check the live status of 170+ cloud and SaaS providers from a terminal or CI scr
 brew install outagedeck/tap/outagedeck
 ```
 
+With [mise](https://mise.jdx.dev/):
+
+```bash
+mise use -g github:outagedeck/cli@0.1.0
+```
+
 On Windows with Scoop:
 
 ```powershell
