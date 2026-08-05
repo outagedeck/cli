@@ -18,7 +18,7 @@ brew install outagedeck/tap/outagedeck
 With [mise](https://mise.jdx.dev/):
 
 ```bash
-mise use -g github:outagedeck/cli@0.1.0
+mise use -g github:outagedeck/cli@0.1.1
 ```
 
 With Nix:

@@ -121,8 +121,7 @@ func requestJSON(ctx context.Context, httpClient *http.Client, endpoint, apiKey 
 }
 
 func providerURL(slug string) string {
-	return "https://outagedeck.com/providers/" + url.PathEscape(slug) +
-		"?utm_source=cli&utm_medium=terminal&utm_campaign=cli_distribution"
+	return "https://outagedeck.com/providers/" + url.PathEscape(slug)
 }
 
 func fetchProvider(ctx context.Context, httpClient *http.Client, slug, apiKey string) result {

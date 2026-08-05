@@ -20,7 +20,7 @@
           pkgs = import nixpkgs { inherit system; };
           outagedeck = pkgs.buildGoModule {
             pname = "outagedeck";
-            version = "0.1.0";
+            version = "0.1.1";
 
             src = self;
             vendorHash = null;
@@ -29,7 +29,7 @@
             ldflags = [
               "-s"
               "-w"
-              "-X main.version=0.1.0"
+              "-X main.version=0.1.1"
             ];
 
             meta = {

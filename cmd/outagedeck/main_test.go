@@ -97,3 +97,13 @@ func TestNormalizeProviders(t *testing.T) {
 		t.Fatal("expected invalid slug error")
 	}
 }
+
+func TestProviderURLIsCanonical(t *testing.T) {
+	got := providerURL("github")
+	if got != "https://outagedeck.com/providers/github" {
+		t.Fatalf("providerURL() = %q", got)
+	}
+	if strings.Contains(got, "?") {
+		t.Fatalf("providerURL() contains query parameters: %q", got)
+	}
+}
