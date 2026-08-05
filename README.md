@@ -40,6 +40,13 @@ Or install from source:
 go install github.com/outagedeck/cli/cmd/outagedeck@latest
 ```
 
+Already use GitHub CLI? The companion extension defaults to GitHub provider and service health:
+
+```bash
+gh extension install outagedeck/gh-outagedeck
+gh outagedeck
+```
+
 Release archives for macOS, Linux, and Windows are available on the [releases page](https://github.com/outagedeck/cli/releases).
 
 ## Use
