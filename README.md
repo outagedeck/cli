@@ -15,6 +15,12 @@ Check the live status of 170+ cloud and SaaS providers from a terminal or CI scr
 brew install outagedeck/tap/outagedeck
 ```
 
+With [MacPorts](https://ports.macports.org/port/outagedeck/):
+
+```bash
+sudo port install outagedeck
+```
+
 With [mise](https://mise.jdx.dev/):
 
 ```bash
