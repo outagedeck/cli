@@ -33,6 +33,14 @@ With Nix:
 nix run github:outagedeck/cli -- --version
 ```
 
+In a Dev Container or Codespace, use the published [Dev Containers Extra feature](https://github.com/devcontainers-extra/features/tree/main/src/outagedeck):
+
+```json
+"features": {
+  "ghcr.io/devcontainers-extra/features/outagedeck:1": {}
+}
+```
+
 On Windows with Scoop:
 
 ```powershell
