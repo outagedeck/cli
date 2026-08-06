@@ -4,6 +4,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/outagedeck/cli)](https://github.com/outagedeck/cli/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/outagedeck/cli?quickstart=1)
 
 ![OutageDeck CLI checking GitHub, Anthropic, Cloudflare, and OpenAI](assets/terminal-preview.png)
 
@@ -40,6 +41,8 @@ In a Dev Container or Codespace, use the published [Dev Containers Extra feature
   "ghcr.io/devcontainers-extra/features/outagedeck:1": {}
 }
 ```
+
+Or launch the repository's ready-to-use configuration with [GitHub Codespaces](https://codespaces.new/outagedeck/cli?quickstart=1); it installs the current OutageDeck release automatically.
 
 On Windows with Scoop:
 
