@@ -363,8 +363,8 @@ Environment:
 
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		usage(stderr)
-		return 1
+		usage(stdout)
+		return 0
 	}
 	switch args[0] {
 	case "status", "check":
