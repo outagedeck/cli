@@ -25,7 +25,7 @@ sudo port install outagedeck
 With [mise](https://mise.jdx.dev/):
 
 ```bash
-mise use -g github:outagedeck/cli@0.1.1
+mise use -g github:outagedeck/cli@0.1.2
 ```
 
 With Nix:
