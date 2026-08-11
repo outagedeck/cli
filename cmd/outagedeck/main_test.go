@@ -13,6 +13,20 @@ func providerResponse(slug, name, status string) string {
 	return fmt.Sprintf(`{"data":{"slug":%q,"name":%q,"currentStatus":{"code":%q,"label":%q,"headline":"Live headline"},"source":{"checkedAt":"2026-08-05T00:00:00Z"},"counts":{"activeIncidents":1}}}`, slug, name, status, status)
 }
 
+func TestNoArgsShowsHelpAndSucceeds(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	exit := run(nil, &stdout, &stderr)
+	if exit != 0 {
+		t.Fatalf("exit = %d, want 0", exit)
+	}
+	if !strings.Contains(stdout.String(), "Usage:") {
+		t.Fatalf("unexpected output: %s", stdout.String())
+	}
+	if stderr.Len() != 0 {
+		t.Fatalf("unexpected stderr: %s", stderr.String())
+	}
+}
+
 func TestStatusOperational(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.Header.Get("User-Agent") == "" {
