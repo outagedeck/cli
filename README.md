@@ -22,6 +22,12 @@ With [MacPorts](https://ports.macports.org/port/outagedeck/):
 sudo port install outagedeck
 ```
 
+With [Hermit](https://cashapp.github.io/hermit/) on macOS or Linux:
+
+```bash
+hermit install outagedeck
+```
+
 With [mise](https://mise.jdx.dev/):
 
 ```bash
