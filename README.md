@@ -28,6 +28,14 @@ With [Hermit](https://cashapp.github.io/hermit/) on macOS or Linux:
 hermit install outagedeck
 ```
 
+With [binenv](https://github.com/devops-works/binenv) on macOS or Linux:
+
+```bash
+binenv update -d
+binenv update -f outagedeck
+binenv install outagedeck
+```
+
 With [mise](https://mise.jdx.dev/):
 
 ```bash
