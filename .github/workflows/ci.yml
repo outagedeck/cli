@@ -25,6 +25,31 @@ jobs:
       - name: Build
         run: go build ./cmd/outagedeck
 
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Test
+        run: go test ./...
+      - name: Build
+        run: go build -ldflags "-X main.version=ci" -o outagedeck.exe ./cmd/outagedeck
+      - name: Check commands
+        shell: pwsh
+        run: |
+          if ((.\outagedeck.exe version) -ne "ci") {
+            throw "Unexpected version output"
+          }
+
+          $alerts = .\outagedeck.exe alerts github cloudflare | Out-String
+          if ($alerts -notmatch "stack=github%2Ccloudflare") {
+            throw "Alerts command did not return the expected stack link"
+          }
+
   container:
     runs-on: ubuntu-latest
     timeout-minutes: 10

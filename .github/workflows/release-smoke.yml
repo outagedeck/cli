@@ -1,0 +1,85 @@
+name: Verify Windows release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without the v prefix
+        required: true
+        default: "0.1.3"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          REQUESTED_VERSION: ${{ inputs.version }}
+        run: |
+          $version = if ($env:REQUESTED_VERSION) {
+            $env:REQUESTED_VERSION
+          } else {
+            ($env:RELEASE_TAG).TrimStart("v")
+          }
+
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$') {
+            throw "Invalid version: $version"
+          }
+
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Download release
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $baseUrl = "https://github.com/outagedeck/cli/releases/download/v$env:VERSION"
+          $archive = "outagedeck_$($env:VERSION)_windows_amd64.zip"
+
+          Invoke-WebRequest "$baseUrl/$archive" -OutFile $archive
+          Invoke-WebRequest "$baseUrl/checksums.txt" -OutFile checksums.txt
+
+      - name: Verify archive
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          $archive = "outagedeck_$($env:VERSION)_windows_amd64.zip"
+          $entry = Get-Content checksums.txt | Where-Object { $_ -match "  $([regex]::Escape($archive))$" }
+          if (-not $entry) {
+            throw "Checksum entry not found for $archive"
+          }
+
+          $expected = ($entry -split "\s+")[0].ToUpperInvariant()
+          $actual = (Get-FileHash $archive -Algorithm SHA256).Hash
+          if ($actual -ne $expected) {
+            throw "Checksum mismatch for $archive"
+          }
+
+          Expand-Archive $archive -DestinationPath release
+          if (-not (Test-Path release/outagedeck.exe)) {
+            throw "outagedeck.exe is missing from $archive"
+          }
+
+      - name: Check commands
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if ((.\release\outagedeck.exe version) -ne $env:VERSION) {
+            throw "Unexpected version output"
+          }
+
+          $alerts = .\release\outagedeck.exe alerts github cloudflare | Out-String
+          if ($alerts -notmatch "stack=github%2Ccloudflare") {
+            throw "Alerts command did not return the expected stack link"
+          }
