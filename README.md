@@ -34,6 +34,14 @@ With Nix:
 nix run github:outagedeck/cli -- --version
 ```
 
+From the multi-architecture container image:
+
+```bash
+docker run --rm ghcr.io/outagedeck/cli:0.1.3 status --fail-on=never github cloudflare
+```
+
+The image runs as a non-root user, has no shell or package manager, and is published for Linux AMD64 and ARM64 with provenance and an SBOM.
+
 In a Dev Container or Codespace, use the published [Dev Containers Extra feature](https://github.com/devcontainers-extra/features/tree/main/src/outagedeck):
 
 ```json
