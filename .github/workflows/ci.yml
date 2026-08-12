@@ -45,7 +45,7 @@ jobs:
             throw "Unexpected version output"
           }
 
-          $alerts = .\outagedeck.exe alerts github cloudflare
+          $alerts = .\outagedeck.exe alerts github cloudflare | Out-String
           if ($alerts -notmatch "stack=github%2Ccloudflare") {
             throw "Alerts command did not return the expected stack link"
           }
