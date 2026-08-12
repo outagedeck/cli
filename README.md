@@ -25,7 +25,7 @@ sudo port install outagedeck
 With [mise](https://mise.jdx.dev/):
 
 ```bash
-mise use -g github:outagedeck/cli@0.1.2
+mise use -g github:outagedeck/cli@0.1.3
 ```
 
 With Nix:
@@ -83,6 +83,16 @@ $ outagedeck search "Claude"
 anthropic                operational        Anthropic
 ```
 
+Turn a checked dependency stack into a prefilled alert setup:
+
+```console
+$ outagedeck alerts aws cloudflare github openai
+Set up alerts for aws, cloudflare, github, openai:
+https://outagedeck.com/account?stack=aws%2Ccloudflare%2Cgithub%2Copenai&utm_campaign=cli_distribution&utm_content=alerts_command&utm_medium=terminal&utm_source=cli
+```
+
+Free email alerts cover up to five providers, and the selected stack survives the email sign-in round trip.
+
 Use structured output in scripts:
 
 ```bash
@@ -104,7 +114,7 @@ The status command exits with:
 - The public API allows 120 requests per hour. The CLI checks up to 20 providers concurrently.
 - No telemetry is added by the CLI. Requests identify the client through a standard `User-Agent` header.
 
-Review the [API documentation](https://outagedeck.com/developers/api?utm_source=github&utm_medium=repository&utm_campaign=cli_distribution) or [configure outage alerts](https://outagedeck.com/alerts?utm_source=github&utm_medium=repository&utm_campaign=cli_distribution).
+Review the [API documentation](https://outagedeck.com/developers/api?utm_source=github&utm_medium=repository&utm_campaign=cli_distribution) or run `outagedeck alerts` with the providers you want to watch.
 
 ## License
 

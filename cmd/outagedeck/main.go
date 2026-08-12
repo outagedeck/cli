@@ -124,6 +124,16 @@ func providerURL(slug string) string {
 	return "https://outagedeck.com/providers/" + url.PathEscape(slug)
 }
 
+func stackAlertsURL(providers []string) string {
+	query := url.Values{}
+	query.Set("stack", strings.Join(providers, ","))
+	query.Set("utm_source", "cli")
+	query.Set("utm_medium", "terminal")
+	query.Set("utm_campaign", "cli_distribution")
+	query.Set("utm_content", "alerts_command")
+	return "https://outagedeck.com/account?" + query.Encode()
+}
+
 func fetchProvider(ctx context.Context, httpClient *http.Client, slug, apiKey string) result {
 	var payload providerEnvelope
 	endpoint := apiBase() + "/providers/" + url.PathEscape(slug)
@@ -343,18 +353,34 @@ func searchCommand(args []string, stdout, stderr io.Writer) int {
 	return 0
 }
 
+func alertsCommand(args []string, stdout, stderr io.Writer) int {
+	providers, err := normalizeProviders(args)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
+	}
+
+	fmt.Fprintf(stdout, "Set up alerts for %s:\n", strings.Join(providers, ", "))
+	fmt.Fprintln(stdout, stackAlertsURL(providers))
+	fmt.Fprintln(stdout, "\nThe selected stack will already be filled in after sign-in.")
+	fmt.Fprintln(stdout, "Free email alerts cover up to five providers.")
+	return 0
+}
+
 func usage(writer io.Writer) {
 	fmt.Fprintln(writer, `OutageDeck CLI — check cloud and SaaS status from official vendor feeds
 
 Usage:
   outagedeck status [flags] <provider> [provider...]
   outagedeck search [flags] <query>
+  outagedeck alerts <provider> [provider...]
   outagedeck version
 
 Examples:
   outagedeck status aws cloudflare github openai
   outagedeck status --json --fail-on=outage anthropic
   outagedeck search "Claude"
+  outagedeck alerts github cloudflare openai
 
 Environment:
   OUTAGEDECK_API_KEY       optional higher-quota API key
@@ -371,6 +397,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return statusCommand(args[1:], stdout, stderr)
 	case "search":
 		return searchCommand(args[1:], stdout, stderr)
+	case "alerts":
+		return alertsCommand(args[1:], stdout, stderr)
 	case "version", "--version", "-v":
 		fmt.Fprintln(stdout, version)
 		return 0
