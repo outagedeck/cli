@@ -112,6 +112,36 @@ func TestNormalizeProviders(t *testing.T) {
 	}
 }
 
+func TestAlertsBuildsStackSpecificAttributedURL(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	exit := run([]string{"alerts", "GitHub,cloudflare", "github"}, &stdout, &stderr)
+	if exit != 0 {
+		t.Fatalf("exit = %d, stderr = %s", exit, stderr.String())
+	}
+	for _, expected := range []string{
+		"Set up alerts for github, cloudflare:",
+		"stack=github%2Ccloudflare",
+		"utm_source=cli",
+		"utm_medium=terminal",
+		"utm_campaign=cli_distribution",
+		"utm_content=alerts_command",
+		"selected stack will already be filled in after sign-in",
+		"Free email alerts cover up to five providers",
+	} {
+		if !strings.Contains(stdout.String(), expected) {
+			t.Fatalf("missing %q in output:\n%s", expected, stdout.String())
+		}
+	}
+}
+
+func TestAlertsRejectsInvalidProvider(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	exit := run([]string{"alerts", "bad slug"}, &stdout, &stderr)
+	if exit != 1 || !strings.Contains(stderr.String(), "invalid provider slug") {
+		t.Fatalf("exit = %d, stderr = %s", exit, stderr.String())
+	}
+}
+
 func TestProviderURLIsCanonical(t *testing.T) {
 	got := providerURL("github")
 	if got != "https://outagedeck.com/providers/github" {
