@@ -66,7 +66,13 @@ In a Dev Container or Codespace, use the published [Dev Containers Extra feature
 
 Or launch the repository's ready-to-use configuration with [GitHub Codespaces](https://codespaces.new/outagedeck/cli?quickstart=1); it installs the current OutageDeck release automatically.
 
-On Windows with Scoop:
+On Windows with WinGet:
+
+```powershell
+winget install --id OutageDeck.CLI --exact
+```
+
+Or with Scoop:
 
 ```powershell
 scoop bucket add outagedeck https://github.com/outagedeck/scoop-bucket
