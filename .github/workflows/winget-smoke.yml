@@ -1,0 +1,78 @@
+name: Verify WinGet install
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_version:
+        description: Optional exact version to require
+        required: false
+        type: string
+  schedule:
+    - cron: "23 4 * * *"
+  pull_request:
+    paths:
+      - .github/workflows/winget-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Set up WinGet
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module Microsoft.WinGet.Client -Scope CurrentUser -Force
+          Import-Module Microsoft.WinGet.Client
+          Repair-WinGetPackageManager -Latest -Force
+          winget --info
+
+      - name: Install OutageDeck
+        shell: pwsh
+        run: |
+          winget install `
+            --id OutageDeck.CLI `
+            --exact `
+            --source winget `
+            --silent `
+            --disable-interactivity `
+            --accept-source-agreements `
+            --accept-package-agreements
+
+      - name: Check installed commands
+        shell: pwsh
+        env:
+          EXPECTED_VERSION: ${{ inputs.expected_version }}
+        run: |
+          $executable = (Get-Command outagedeck -ErrorAction SilentlyContinue).Source
+          if (-not $executable) {
+            $wingetLink = Join-Path $env:LOCALAPPDATA "Microsoft\WinGet\Links\outagedeck.exe"
+            if (Test-Path $wingetLink) {
+              $executable = $wingetLink
+            }
+          }
+
+          if (-not $executable) {
+            throw "WinGet installed the package but outagedeck.exe is unavailable"
+          }
+
+          $version = (& $executable version | Out-String).Trim()
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$') {
+            throw "Unexpected version output: $version"
+          }
+
+          if ($env:EXPECTED_VERSION -and $version -ne $env:EXPECTED_VERSION) {
+            throw "Expected version $env:EXPECTED_VERSION but WinGet installed $version"
+          }
+
+          $alerts = & $executable alerts github cloudflare | Out-String
+          if ($alerts -notmatch "stack=github%2Ccloudflare") {
+            throw "Alerts command did not return the expected stack link"
+          }
+
+          "Installed OutageDeck CLI $version through the public WinGet source." >> $env:GITHUB_STEP_SUMMARY
